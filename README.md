@@ -1,6 +1,7 @@
-# Использование Cloud Object Storage для обработки изображений в Serverless окружениии
+# Использование Cloud Object Storage для обработки изображений в Serverless окружении
 ## Summary
 In this application, you upload an image to a web application that is stored in IBM Cloud Object Storage, which triggers your serverless functions to run. Those functions perform some image processing and analysis, such as charcoaling the image and running visual recognition on it. After the analysis and processing is done, the results are stored in a different Cloud Object Storage bucket, which can then be read.
+
 
 
 ## Architecture
@@ -17,7 +18,7 @@ To run this application, you'll need to set up IBM Object Storage and the IBM Vi
     * From the catalog select [Object Storage](https://cloud.ibm.com/catalog/services/cloud-object-storage).
     * Give your service a name, and click `Create`.
     * In the left side menu, select `Buckets`, and then `Create bucket`.
-    * Give your bucket a unique name. 
+    * Give your bucket a unique name.
     * For Resiliency, select `Regional`, and for Location, select `us-south`. *Note: This trigger is currently available in us-south, us-east, and eu-gb regions. You could select one of the other available regions, but our examples will use us-south*
     * Click `Create Bucket`.
     * Create another bucket, with the same name suffixed by `-processed`. If your original bucket was `my-bucket`, then your new bucket will be `my-bucket-processed`.
@@ -47,13 +48,13 @@ To run this application, you'll need to set up IBM Object Storage and the IBM Vi
     ```
 
 ### Create Required IAM Policy for Cloud Functions to Access Cloud Object Storage
-1. Before you can create a trigger to listen for bucket change events, you must assign the Notifications Manager role to your Cloud Functions namespace. As a Notifications Manager, Cloud Functions can view, modify, and delete notifications for a Cloud Object Storage bucket. 
+1. Before you can create a trigger to listen for bucket change events, you must assign the Notifications Manager role to your Cloud Functions namespace. As a Notifications Manager, Cloud Functions can view, modify, and delete notifications for a Cloud Object Storage bucket.
     ```
     ibmcloud iam authorization-policy-create functions cloud-object-storage "Notifications Manager" --source-service-instance-name <functions_namespace_name> --target-service-instance-name <cos_service_instance_name>
     ```
 
 ### Create Required Environment Variables and Deploy Cloud Functions
-To deploy the functions required in this application, we'll use the `ibm fn deploy` command. This command will look for a `manifest.yaml` file defining a collection of packages, actions, triggers, and rules to be deployed. 
+To deploy the functions required in this application, we'll use the `ibm fn deploy` command. This command will look for a `manifest.yaml` file defining a collection of packages, actions, triggers, and rules to be deployed.
 1. Let's clone the application.
     ```
     git clone git@github.com:IBM/cos-trigger-functions.git
@@ -73,7 +74,7 @@ To deploy the functions required in this application, we'll use the `ibm fn depl
     export BUCKET_NAME=<your_bucket_name>
     ```
 
-1. You will need to save the endpoint name, which is the COS Endpoint for your buckets. Since you selected us-south when selecting your buckets, the endpoint should be `s3.us-south.cloud-object-storage.appdomain.cloud`. 
+1. You will need to save the endpoint name, which is the COS Endpoint for your buckets. Since you selected us-south when selecting your buckets, the endpoint should be `s3.us-south.cloud-object-storage.appdomain.cloud`.
 
     ```
     export ENDPOINT=s3.us-south.cloud-object-storage.appdomain.cloud
@@ -112,7 +113,7 @@ Finally, let's deploy the web application that enables our users to upload image
     ```
     cd ../app
     ```
-  
+
 1. Update the `config.js` file with the required configuration values: your bucket name, your processed bucket name, and your endpoint url. You should've already found these values earlier.
 
 1. Create a file named `credentials.json` based on the `credentials_template.json` file. You can easily get the credentials by going to the cloud object storage service page, and clicking `Service Credentials`. You can copy this entire block and paste it as a child to `"OBJECTSTORAGE_CREDENTIALS":`.
@@ -126,7 +127,7 @@ Finally, let's deploy the web application that enables our users to upload image
       instances: 1
     ```
 
-    This manifest file describes the cloud foundry application we're about to deploy. Please rename the application to anything you would like. 
+    This manifest file describes the cloud foundry application we're about to deploy. Please rename the application to anything you would like.
 
 1. Deploy the application:
     ```
