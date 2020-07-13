@@ -1,4 +1,4 @@
-# Leverage Cloud Object Storage for Image Processing in a Serverless Environment
+# Использование Cloud Object Storage для обработки изображений в Serverless окружениии
 ## Summary
 In this application, you upload an image to a web application that is stored in IBM Cloud Object Storage, which triggers your serverless functions to run. Those functions perform some image processing and analysis, such as charcoaling the image and running visual recognition on it. After the analysis and processing is done, the results are stored in a different Cloud Object Storage bucket, which can then be read.
 
