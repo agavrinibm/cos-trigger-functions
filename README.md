@@ -1,22 +1,20 @@
 # Использование Cloud Object Storage для обработки изображений в Serverless окружении
-## Summary
-In this application, you upload an image to a web application that is stored in IBM Cloud Object Storage, which triggers your serverless functions to run. Those functions perform some image processing and analysis, such as charcoaling the image and running visual recognition on it. After the analysis and processing is done, the results are stored in a different Cloud Object Storage bucket, which can then be read.
+## Введение
+С помощью этого приложения вы сможете загрузить фото в облачное хранилище IBM Cloud Object Storage, и автоматически обработать его с помощью serverless процедуры, которая автоматически обработает и проанализирует изображение. После завершения анализа и обработки результаты сохраняются в другом хранилище облачных объектов, которое затем можно прочитать.
 
-
-
-## Architecture
+## Архитектура
    ![](images/architecture.png)
 
-## Instructions
-### Prerequisites
-1. An [IBM Cloud Account](https://cloud.ibm.com/register)
-1. An [IBM Cloud CLI](https://cloud.ibm.com/docs/cli/reference/ibmcloud?topic=cloud-cli-install-ibmcloud-cli#install_use) with the IBM Cloud Functions [Plugin](https://cloud.ibm.com/docs/openwhisk?topic=cloud-functions-cli_install) installed.
+## Инструкции
+### Что нужно для развертывания приложения?
+1. Аккаунт в [Облаке IBM](https://ibm.biz/alexwebex)
+1. Установленный локально интерфейс для работы из командной строки [IBM Cloud CLI](https://cloud.ibm.com/docs/cli/reference/ibmcloud?topic=cloud-cli-install-ibmcloud-cli#install_use) с плагином IBM Cloud Functions [Plugin](https://cloud.ibm.com/docs/openwhisk?topic=cloud-functions-cli_install) installed.
 
-### Create Required Services on IBM Cloud
-To run this application, you'll need to set up IBM Object Storage and the IBM Visual Recognition Service on IBM Cloud
-1. Create a Cloud Object Storage Service Instance:
-    * From the catalog select [Object Storage](https://cloud.ibm.com/catalog/services/cloud-object-storage).
-    * Give your service a name, and click `Create`.
+### Создать требуемые сервисы в IBM Cloud
+Чтобы запустить это приложение, вам нужно сначала настроить IBM Object Storage и сервис распознавания IBM Visual Recognition Service в IBM Cloud.
+1. Создать инстанс IBM Cloud Object Storage:
+    * Откройте [Object Storage](https://cloud.ibm.com/catalog/services/cloud-object-storage) в каталоге IBM Cloud.
+    * Дайте вашему сервису имя, и нажмите `Create`.
     * In the left side menu, select `Buckets`, and then `Create bucket`.
     * Give your bucket a unique name.
     * For Resiliency, select `Regional`, and for Location, select `us-south`. *Note: This trigger is currently available in us-south, us-east, and eu-gb regions. You could select one of the other available regions, but our examples will use us-south*
