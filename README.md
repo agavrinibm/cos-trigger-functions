@@ -14,44 +14,47 @@
 Чтобы запустить это приложение, вам нужно сначала настроить IBM Object Storage и сервис распознавания IBM Visual Recognition Service в IBM Cloud.
 1. Создать инстанс IBM Cloud Object Storage:
     * Откройте [Object Storage](https://cloud.ibm.com/catalog/services/cloud-object-storage) в каталоге IBM Cloud.
-    * Дайте вашему сервису имя, и нажмите `Create`.
-    * In the left side menu, select `Buckets`, and then `Create bucket`.
-    * Give your bucket a unique name.
-    * For Resiliency, select `Regional`, and for Location, select `us-south`. *Note: This trigger is currently available in us-south, us-east, and eu-gb regions. You could select one of the other available regions, but our examples will use us-south*
-    * Click `Create Bucket`.
-    * Create another bucket, with the same name suffixed by `-processed`. If your original bucket was `my-bucket`, then your new bucket will be `my-bucket-processed`.
-    * Again, ensure that you selected the same region as your first bucket, in this case `Regional` and `us-south`.
-    * In the left side menu, click `Service Credentials`. Click `New Credential`.
-    * Check the checkbox for `Include HMAC Credential`. Click `Add`.
+    * Дайте вашему сервису имя, нажмите `Create`.
+    * Слева в меню-выберите `Buckets`, а затем - `Create bucket` - `Custom bucket`. Bucket ("ведро") - это большая  корзина, в которой будут храниться ваши данные.
+    * Дайте вашему bucket уникальное имя.
+    * Выберите `Regional` в параметрах `Resiliency`, а в Location  - `eu-de`. *Примечание: Можете использовать и другую геолокацию из списка, в нашем примере мы взяли датацентр в Германии*
+    * Оставьте выбранным Tier по-умолчанию
+		* Включите Activity tracker (опция Read and Write) и Cloud Monitoring, нажмите `Create Bucket`.
+    * Создайте еще один bucket, с таким же именем, но добавьте суффикс `-processed`. Если сначала вы создали `my-bucket`, то новое имя будет `my-bucket-processed`.
+    * Убедитесь, что вы выбрали тот же самый регион - `Regional` и `eu-de`.
+    * В левом меню нажмите `Service Credentials`, а затем - `New Credential`.
+    * Включите `Include HMAC Credential` (в Advanced Options). Нажмите `Add`.
 
-1. Create a Visual Recognition Service Instance
-    * From the catalog select [Visual Recognition](https://cloud.ibm.com/catalog/services/visual-recognition)
-    * Give your service a name, and click `Create`.
-    * In the left side menu, click `Service Credentials`. If there are no service credentials created, click `New Credential`. Once your Service Credentials are created, make note of your `apikey`.
+1. Создайте инстанс сервиса Visual Recognition
+    * Выберите в каталоге [Visual Recognition](https://cloud.ibm.com/catalog/services/visual-recognition)
+		* Выберите регион `Frankfurt`
+    * Придумайте имя вешему сервису, нажмите `Create`.
+    * В левом меню нажмите `Service Credentials`. Если там пока нет существующих записей, нажмимте `New Credential`. Как только запись появится, запишите `apikey`.
 
-### Login and set up your IBM Cloud CLI with Functions plugin
-1. Login to the IBM Cloud CLI:
+### Настройка командного интерфейса IBM Cloud CLI
+1. Войдите в интерфейс командной строки IBM Cloud:
     ```
     ibmcloud login
     ```
 
-1. List the namespaces available in IBM Cloud Functions:
+1. Просмотрите список доступных namespaces:
     ```
     ibmcloud fn namespace list
     ```
 
-1. Set your namespace using the ID found in the previous step:
+1. Выберите необходимый namespace:
     ```
     ibmcloud fn property set --namespace <namespace_id>
     ```
 
-### Create Required IAM Policy for Cloud Functions to Access Cloud Object Storage
-1. Before you can create a trigger to listen for bucket change events, you must assign the Notifications Manager role to your Cloud Functions namespace. As a Notifications Manager, Cloud Functions can view, modify, and delete notifications for a Cloud Object Storage bucket.
+### Создание необходимой политики IAM для облачных функций для доступа к Cloud Object Storage
+1. Перед созданием триггера событий, вы должны назначить роль менеджера уведомлений соответствующему namespace. Такая роль позволяет просматривать, изменять и удалять уведомления сервиса Cloud Object Storage.
+
     ```
     ibmcloud iam authorization-policy-create functions cloud-object-storage "Notifications Manager" --source-service-instance-name <functions_namespace_name> --target-service-instance-name <cos_service_instance_name>
     ```
 
-### Create Required Environment Variables and Deploy Cloud Functions
+### Создание необходимых переменных среды и развертывание облачных функций
 To deploy the functions required in this application, we'll use the `ibm fn deploy` command. This command will look for a `manifest.yaml` file defining a collection of packages, actions, triggers, and rules to be deployed.
 1. Let's clone the application.
     ```
