@@ -55,71 +55,75 @@
     ```
 
 ### Создание необходимых переменных среды и развертывание облачных функций
-To deploy the functions required in this application, we'll use the `ibm fn deploy` command. This command will look for a `manifest.yaml` file defining a collection of packages, actions, triggers, and rules to be deployed.
-1. Let's clone the application.
+Для развертывания функций, необходимых в этом приложении, мы будем использовать команду `ibm fn deploy`. Эта команда использует файл `manifest.yaml`, определяющий набор пакетов, действий, триггеров и правил для развертывания.
+
+1. Склонируем приложение
     ```
-    git clone git@github.com:IBM/cos-trigger-functions.git
+    git clone git@github.com:agavrinibm/cos-trigger-functions.git
     ```
 
-1. Take a look at the `serverless/manifest.yaml file`. You should see manifest describing the various actions, triggers, packages, and sequences to be created. You will also notice that there are a number of environment variables you should set locally before running this manifest file.
+1. Взгляните на файл `serverless/manifest.yaml`. Вы увидите манифест-файл, описывающий различные действия, триггеры, пакеты и последовательности, которые будут созданы. Вы также увидите ряд переменных, которые вы должны установить локально перед запуском этого файла.
 
-1. Choose a package name, trigger name, and rule name and then save the environment variables.  *Note: The package you will create will hold all of the actions for this application.*
+1. Выберите имя пакета, имя триггера и имя правила, а затем сохраните переменные среды.  *Примечание: пакет, который вы создадите, будет содержать все действия для этого приложения.*
     ```
     export PACKAGE_NAME=<your_chosen_package_name>
     export RULE_NAME=<your_chosen_rule_name>
     export TRIGGER_NAME=<your_chosen_trigger_name>
     ```
 
-1. You already chose a bucket name earlier when creating your COS Instance. Save that name as your BUCKET_NAME environment variable:
+1. Вы уже выбрали имя группы ранее при создании экземпляра COS. Сохраните это имя как переменную среды BUCKET_NAME:
     ```
     export BUCKET_NAME=<your_bucket_name>
     ```
 
-1. You will need to save the endpoint name, which is the COS Endpoint for your buckets. Since you selected us-south when selecting your buckets, the endpoint should be `s3.us-south.cloud-object-storage.appdomain.cloud`.
+1. Вам нужно будет сохранить имя точки входа (endpoint), которая является точкой COS для ваших сегментов. Поскольку при выборе сегментов вы выбрали eu-de, конечной точкой должна быть `s3.eu-de.cloud-object-storage.appdomain.cloud`.
 
     ```
-    export ENDPOINT=s3.us-south.cloud-object-storage.appdomain.cloud
+    export ENDPOINT=s3.eu-de.cloud-object-storage.appdomain.cloud
     ```
 
-*Note: If you selected a different region, you can find your endpoint by clicking your Cloud Object Storage service in the [Resource list](https://cloud.ibm.com/resources?groups=storage), finding your bucket in the list, and then looking under Configuration for that bucket. Use the public endpoint.*
+*Примечание. Если вы выбрали другой регион, вы можете найти свой endpoint, выбрав службу облачных хранилищ объектов в [списке ресурсов] (https://cloud.ibm.com/resources?groups=storage), чтобы найти ваш сегмент в список, а затем искать в разделе «Endpoint» для этого сегмента. Используйте общедоступный (public) endpoint.*
 
-1. Finally, you will need some information from the Visual Recognition service.  You saved your apikey earlier, so use that. This application is built against the version released on `2018-03-19`, so we'll use that value for VERSION.
+1. Наконец, вам понадобится некоторая информация из сервиса распознавания изображений Watson. Вы сохранили свой apikey ранее, так что используйте его. Это приложение сделано для версии API, датированной `2018-03-19`, поэтому мы будем использовать это значение для VERSION.
+
     ```
-    export API_KEY=<your_visual_recognition apikey>
+    export API_KEY=<ваш apikey для IBM Watson Visual Recognition>
     export VERSION=2018-03-19
     ```
 
-1. You've set up some required credentials and various parameters for your IBM Cloud Functions. Let's deploy the functions now! Change directories to the `serverless` folder, and then deploy the functions.
+1. Вы настроили некоторые необходимые учетные данные и различные параметры для своих функций IBM Cloud. Давайте развернем наше serverless-приложение. Перейдите в папку `serverless` и разверните функцию.
     ```
     cd serverless
     ibmcloud fn deploy
     ```
 
-### Bind Service Credentials to the Created Cloud Object Storage Package
-1. The deploy command created a package for you called `cloud-object-storage`. This package contains some useful cloud functions for interacting with cloud object storage. Let's update the package with your endpoint information.
+### Привязка учетные данные службы к пакету хранения созданных облачных объектов
+1. Команда deploy создала для вас пакет под названием  `cloud-object-storage`. Этот пакет содержит несколько полезных облачных функций для взаимодействия с хранилищем облачных объектов. Давайте обновим пакет информацией о вашем endpoint.
+
     ```
     ibmcloud fn package update cloud-object-storage --param endpoint $ENDPOINT
     ```
 
-1. Let's bind the service credentials to this package.
+1. Свяжем учетные данные службы с этим пакетом.
     ```
     ibmcloud fn service bind cloud-object-storage cloud-object-storage --instance YOUR_COS_INSTANCE_NAME
     ```
 
-1. Congratulations! If you went directly to your cloud object storage bucket and added a file, you should see your trigger fire and some processed actions showing up in your `mybucket-processed` bucket. Let's deploy a simple application for uploading the images and showing these results.
+1. Поздравляем! Если вы обратились непосредственно к своему хранилищу облачных объектов и добавили файл, вы должны увидеть срабатывание триггера и некоторые действия, отображаемые в вашем хранилище `mybucket-processed`. Давайте развернем простое приложение для загрузки изображений и отображения результатов.
 
-### Deploy the Web Application
-Finally, let's deploy the web application that enables our users to upload images and see the resulting images. The application is a node.js with express app, and we can deploy it to IBM Cloud using the manifest.yaml file provided in the `/app` folder.
-1. Change directories to the `app` folder:
+### Развертывание web-приложения
+Наконец, давайте развернем веб-приложение, которое позволяет нашим пользователям загружать изображения и просматривать полученные изображения. Приложение представляет собой node.js приложение с фреймворком express, и мы можем развернуть его в IBM Cloud с помощью файла manifest.yaml, который находится в папке `/app`.
+1. Переходим в папку `app` folder:
     ```
     cd ../app
     ```
 
-1. Update the `config.js` file with the required configuration values: your bucket name, your processed bucket name, and your endpoint url. You should've already found these values earlier.
+1. Обновим файл `config.js`, указав необходимые значения конфигурации: имя bucket, имя bucket с обработанными данными и URL-адрес endpoint. Все эти значения вы уже прописали ранее.
 
-1. Create a file named `credentials.json` based on the `credentials_template.json` file. You can easily get the credentials by going to the cloud object storage service page, and clicking `Service Credentials`. You can copy this entire block and paste it as a child to `"OBJECTSTORAGE_CREDENTIALS":`.
+1. Создайте файл с именем `credentials.json` на основе файла `credentials_template.json`. Вы можете легко получить учетные данные, перейдя на страницу сервиса COS и нажав `Service Credentials`. Вы можете скопировать весь этот блок и вставить его как дочерний в `"OBJECTSTORAGE_CREDENTIALS":`.
 
-1. Open up the manifest.yaml file at `app/manifest.yaml`. You should see something like this:
+
+1. Откройте файл manifest.yaml в `app/manifest.yaml`. Вы должны увидеть что-то вроде этого:
     ```
     ---
     applications:
@@ -128,16 +132,17 @@ Finally, let's deploy the web application that enables our users to upload image
       instances: 1
     ```
 
-    This manifest file describes the cloud foundry application we're about to deploy. Please rename the application to anything you would like.
+    Этот файл манифеста описывает приложение для облачного развертывания с использованием cloud foundry, которое мы собираемся развернуть. Пожалуйста, переименуйте приложение, дав ему уникальное название.
 
-1. Deploy the application:
+1. Разверните приложение:
     ```
     ibmcloud cf push
     ```
 
-1. Finally, we'll need to update the CORS settings on our processed images bucket.  The `cloud-object-storage` package we installed earlier comes with a method to let us do that. Run the following command, but be sure to edit it first with your own `-processed` bucket name.
+1. Наконец, нам нужно обновить настройки CORS для нашего bucket. Пакет `cloud-object-storage`, который мы установили ранее, поставляется с методом, который позволяет это сделать. Запустите следующую команду, но сначала отредактируйте ее, указав свое собственное имя bucket `-processed`.
+
     ```
     ibmcloud fn action invoke cloud-object-storage/bucket-cors-put -b -p bucket myBucket-processed -p corsConfig "{\"CORSRules\":[{\"AllowedHeaders\":[\"*\"], \"AllowedMethods\":[\"POST\",\"GET\",\"DELETE\"], \"AllowedOrigins\":[\"*\"]}]}"
     ```
 
-1. You should now be able to use the application you deployed! When the application was deployed, it should've output a URL where your application lives, something like `my-app-name.mybluemix.net`. You can now go there and start uploading images and seeing your results!
+1. Теперь вы сможете использовать ваше приложение! После развертывания система выведет ссылку URL-адрес, по которой развернуто ваше приложение, наподобие `my-app-name.mybluemix.net`. Зайдите по этой ссылке и посмотрите как оно работает!
