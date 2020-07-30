@@ -7,7 +7,7 @@
 
 ## Инструкции
 ### Что нужно для развертывания приложения?
-1. Аккаунт в [Облаке IBM](https://ibm.biz/alexwebex)
+1. Аккаунт в [Облаке IBM](https://ibm.biz/rucloud)
 1. Установленный локально интерфейс для работы из командной строки [IBM Cloud CLI](https://cloud.ibm.com/docs/cli/reference/ibmcloud?topic=cloud-cli-install-ibmcloud-cli#install_use) с плагином IBM Cloud Functions [Plugin](https://cloud.ibm.com/docs/openwhisk?topic=cloud-functions-cli_install) installed.
 
 ### Создать требуемые сервисы в IBM Cloud
