@@ -43,11 +43,10 @@
     ```
 
 1. Если список namespace пуст, создайте новый:
-		```
-    ibmcloud target -g Default
-    ibmcloud fn namespace create <namespace_name>
-    ibmcloud fn namespace list
-		```
+    `ibmcloud target -g Default`
+    `ibmcloud fn namespace create <namespace_name>`
+    `ibmcloud fn namespace list`
+		
 
 1. Выберите необходимый namespace (укажите его id в параметре namespace):
     ```
