@@ -11,10 +11,13 @@
 const VisualRecognitionV3 = require('watson-developer-cloud/visual-recognition/v3');
 
 async function main(params) {
+
   const visualRecognition = new VisualRecognitionV3({
     version: params.version,
-    iam_apikey: params.apikey
+    iam_apikey: params.apikey,
+		url: params.vrurl
   });
+
   try {
     const { url, bucket } = params;
     let { key } = params;
