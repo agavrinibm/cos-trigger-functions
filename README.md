@@ -37,12 +37,17 @@
     ibmcloud login
     ```
 
-1. Просмотрите список доступных namespaces:
+1. Убедитесь, что ваш регион совпадает с регионом COS (eu-de). если нет - переключите регион с помощью
+    ```
+    ibmcloud target -r eu-de
+    ```
+
+ Просмотрите список доступных namespaces:
     ```
     ibmcloud fn namespace list
     ```
 
-1. Если список namespace пуст, создайте новый:
+1. Если список namespace пуст, создайте новый.
     ```
     ibmcloud target -g Default
     ibmcloud fn namespace create <namespace_name>
