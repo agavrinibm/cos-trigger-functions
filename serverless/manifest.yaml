@@ -59,6 +59,7 @@ project:
             inputs:
               apikey: $API_KEY
               version: $VERSION
+              vrurl: $VRURL
       sequences:
           imagesequence:
             actions: parse_trigger, cloud-object-storage/client-get-signed-url, call_processing_functions

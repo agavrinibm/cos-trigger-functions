@@ -95,6 +95,7 @@
 
     ```
     export API_KEY=<ваш apikey для IBM Watson Visual Recognition>
+		export VRURL=<сервисный URL для IBM Watson Visual Recognition>
     export VERSION=2018-03-19
     ```
 
