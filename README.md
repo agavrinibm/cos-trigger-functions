@@ -15,8 +15,8 @@
 1. Создать инстанс IBM Cloud Object Storage:
     * Откройте [Object Storage](https://cloud.ibm.com/catalog/services/cloud-object-storage) в каталоге IBM Cloud.
     * Дайте вашему сервису имя, нажмите `Create`.
-    * Слева в меню-выберите `Buckets`, а затем - `Create bucket` - `Custom bucket`. Bucket ("ведро") - это большая  корзина, в которой будут храниться ваши данные.
-    * Дайте вашему bucket уникальное имя.
+    * Слева в меню-выберите `Buckets`, а затем - `Create bucket` - `Custom bucket`. Bucket ("бакет") - это коллекция, в которой будут храниться ваши данные.
+    * Дайте вашему бакету уникальное имя.
     * Выберите `Regional` в параметрах `Resiliency`, а в Location  - `eu-de`. *Примечание: Можете использовать и другую геолокацию из списка, в нашем примере мы взяли датацентр в Германии*
     * Оставьте выбранным Tier по-умолчанию
 		* Включите Activity tracker (опция Read and Write) и Cloud Monitoring, нажмите `Create Bucket`.
@@ -42,7 +42,14 @@
     ibmcloud fn namespace list
     ```
 
-1. Выберите необходимый namespace:
+1. Если список namespace пуст, создайте новый :
+		```
+		ibmcloud target -g Default
+		ibmcloud fn namespace create <namespace_name>
+		ibmcloud fn namespace list
+		```
+
+1. Выберите необходимый namespace (укажите его id в параметре namespace):
     ```
     ibmcloud fn property set --namespace <namespace_id>
     ```
